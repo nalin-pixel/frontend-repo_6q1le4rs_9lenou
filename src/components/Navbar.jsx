@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, ShoppingBag } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -11,13 +11,22 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/60 border-b border-emerald-100">
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+      scrolled ? 'glass backdrop-blur bg-white/60 shadow-sm' : 'bg-transparent'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-300 to-emerald-500" />
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-emerald-300 to-emerald-500 shadow" />
             <span className="text-xl font-semibold tracking-tight text-emerald-900">Leaf & Glow</span>
           </Link>
 

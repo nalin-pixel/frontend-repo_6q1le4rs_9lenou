@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 const products = [
   {
@@ -22,10 +23,20 @@ const products = [
 ]
 
 export default function FeaturedProducts() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], [20, -20])
+
   return (
-    <section id="shop" className="py-20">
+    <section id="shop" className="py-24 relative" ref={ref}>
+      <motion.div style={{ y }} className="pointer-events-none absolute inset-0 opacity-[0.12] -z-10" aria-hidden>
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8">
+          <div className="h-full rounded-[40px] shimmer-border" />
+        </div>
+      </motion.div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-6">
+        <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-emerald-900">Featured blends</h2>
             <p className="mt-2 text-emerald-800/80">Our most-loved matcha for every mood.</p>
@@ -40,11 +51,11 @@ export default function FeaturedProducts() {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.05 }}
-              className="group rounded-2xl overflow-hidden border border-emerald-100 bg-white shadow-sm hover:shadow-md transition-shadow"
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="group rounded-2xl overflow-hidden border border-emerald-100 bg-white shadow-sm card-hover"
             >
               <div className="aspect-[4/3] overflow-hidden">
-                <img src={p.image} alt={p.name} className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+                <img src={p.image} alt={p.name} className="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-700" />
               </div>
               <div className="p-4">
                 <div className="flex items-center justify-between">

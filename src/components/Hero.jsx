@@ -1,9 +1,15 @@
 import Spline from '@splinetool/react-spline'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 export default function Hero() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.6])
+
   return (
-    <section className="relative overflow-hidden">
+    <section ref={ref} className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 via-emerald-50 to-white" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 grid lg:grid-cols-2 gap-10 items-center">
@@ -35,10 +41,10 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative h-[420px] sm:h-[520px] lg:h-[600px] rounded-3xl overflow-hidden border border-emerald-100 shadow-[0_10px_40px_rgba(16,185,129,0.12)]">
+        <motion.div style={{ y, opacity }} className="relative h-[420px] sm:h-[520px] lg:h-[600px] rounded-3xl overflow-hidden border border-emerald-100 shadow-[0_10px_40px_rgba(16,185,129,0.12)]">
           <Spline scene="https://prod.spline.design/c1w2QYixcPkptHWE/scene.splinecode" style={{ width: '100%', height: '100%' }} />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-transparent" />
-        </div>
+        </motion.div>
       </div>
     </section>
   )

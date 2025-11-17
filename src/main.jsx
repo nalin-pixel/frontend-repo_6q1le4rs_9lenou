@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import './index.css'
 
 import HomePage from './pages/Home'
@@ -10,16 +11,32 @@ import ContactPage from './pages/Contact'
 import ProductPage from './pages/Product'
 import Test from './Test'
 
-function Router() {
+function PageWrapper({ children }) {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/shop" element={<ShopPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/product/:id" element={<ProductPage />} />
-      <Route path="/test" element={<Test />} />
-    </Routes>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function Router() {
+  const location = useLocation()
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
+        <Route path="/shop" element={<PageWrapper><ShopPage /></PageWrapper>} />
+        <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
+        <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+        <Route path="/product/:id" element={<PageWrapper><ProductPage /></PageWrapper>} />
+        <Route path="/test" element={<PageWrapper><Test /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
   )
 }
 
